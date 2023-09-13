@@ -98,7 +98,7 @@ python main.py
 
 ## ⛑️ Need help!
 
-- Create an [issue](https://github.com/TheCaduceus/tg-upload/issues) on GitHub.
+- Create an [issue](https://github.com/TheCaduceus/Microsoft-E5-Auto-Renewal/issues) on GitHub.
 - [Subscribe](https://t.me/TheCaduceusOfficial) Telegram channel.
 - Ask questions or doubts [here](https://t.me/DrDiscussion).
 - Send a [personal message](https://t.me/TheCaduceusHere) to developer on Telegram.
