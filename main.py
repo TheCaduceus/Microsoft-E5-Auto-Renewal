@@ -80,13 +80,12 @@ def call_endpoints() -> None:
         }
     )
 
-    for _ in range(1,3):
-        for endpoint in endpoints:
-            sleep(TIME_DELAY)
-            try:
-                web_client.get(endpoint)
-            except Exception:
-                pass
+    for endpoint in endpoints:
+        sleep(TIME_DELAY)
+        try:
+            web_client.get(endpoint)
+        except Exception:
+            pass
 
 @web_app.route("/")
 def home():
