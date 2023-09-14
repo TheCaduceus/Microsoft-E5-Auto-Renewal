@@ -7,7 +7,7 @@
   * [Python & Git](#i-1)
   * [Download](#i-2)
   * [Requirements](#i-3)
-* [**✏ Variables**](#installation)
+* [**📝 Variables**](#installation)
 * [**🕹 Deployment**](#deployment)
   * [Locally](#d-1)
   * [Replit](#d-2)
@@ -62,15 +62,32 @@ cd Microsoft-E5-Auto-Renewal
 pip install -r requirements.txt
 ```
 
-## ✏ Variables
+## 📝 Variables
 **Below given variables should be filled in `config.py` file or can be configured as environment variables.**
-- `REFRESH_TOKEN`|`E5_REFRESH_TOKEN`: Refresh token for your admin account. `str`
-- `CLIENT_ID`|`E5_CLIENT_ID`: ID of your Azure Active Directory app. `str`
-- `CLIENT_SECRET`|`E5_CLIENT_SECRET`: Secret of your Azure Active Directory app. `str`
-- `WEB_APP_PASSWORD`|`E5_WEB_APP_PASSWORD`: Strong password to protect critical routes of your web server. `str`
-- `WEB_APP_HOST`|`E5_WEB_APP_HOST`: Bind address of web server. `str`
-- `WEB_APP_PORT`|`E5_WEB_APP_PORT`: Port for web server to listen to. `int`
-- `TIME_DELAY`|`E5_TIME_DELAY`: Time to wait before calling another endpoint. `int`
+* `CLIENT_ID`|`E5_CLIENT_ID`: ID of your Azure Active Directory app. `str`
+  * Create an app in [Azure Active Directory](https://portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/RegisteredApps).
+  * Set application permission: `files.read.all`, `files.readwrite.all`, `sites.read.all`, `sites.readwrite.all`, `user.read.all`, `user.readwrite.all`, `directory.read.all`, `directory.readwrite.all`, `mail.read`, `mail.readwrite`, `mailboxsetting.read`, and `mailboxsetting.readwrite`.
+  * Choose application type as 'Web' & set Redirect URL to `http://localhost:53682/`.
+  * Copy the Application (client) ID.
+* `CLIENT_SECRET`|`E5_CLIENT_SECRET`: Secret of your Azure Active Directory app. `str`
+  * In your  Azure Active Directory app overview, navigate to Client credentials and create secret.
+* `REFRESH_TOKEN`|`E5_REFRESH_TOKEN`: Refresh token for your admin account. `str`
+  * Install [rclone](https://rclone.org).
+  * In CLI, run:
+    ```
+    rclone authorize "onedrive" "ClientID" "ClientSecret"
+    ```
+  * From output, copy the value of `refresh_token` key.
+* `WEB_APP_PASSWORD`|`E5_WEB_APP_PASSWORD`: Strong password to protect critical routes of your web server. `str`
+  * Keep it strong and don't share it.
+* `WEB_APP_HOST`|`E5_WEB_APP_HOST`: Bind address of web server. `str`
+  * By default `0.0.0.0` to run on all possible addresses.
+* `WEB_APP_PORT`|`E5_WEB_APP_PORT`: Port for web server to listen to. `int`
+  * By default `8080`.
+* `TIME_DELAY`|`E5_TIME_DELAY`: Time (in seconds) to wait before calling another endpoint. `int`
+  * By default 3 seconds.
+
+<a name="deployment"></a>
 
 ## 🕹 Deployment
 
@@ -89,7 +106,7 @@ python main.py
 * Run your repl and copy the generated endpoint.
 * Setup a cron-job using [cron-job.org](https://cron-job.org) for every 15 minutes with below configuration.
   * **URL:** `https://YourReplURL.co/call`
-  * **Interval:** 15 Minutes
+  * **Interval:** 15 Minutes.
   * **Header:** `Content-Type` as key & `application/json` as value.
   * **Request Method:** `POST`
   * **Request Body:** `{"password":"YourPasswordHere"}`
@@ -98,7 +115,7 @@ python main.py
 
 ## ⛑️ Need help!
 
-- Create an [issue](https://github.com/TheCaduceus/Microsoft-E5-Auto-Renewal/issues) on GitHub.
+- Create an [issue](https://github.com/TheCaduceus/tg-upload/issues) on GitHub.
 - [Subscribe](https://t.me/TheCaduceusOfficial) Telegram channel.
 - Ask questions or doubts [here](https://t.me/DrDiscussion).
 - Send a [personal message](https://t.me/TheCaduceusHere) to developer on Telegram.
