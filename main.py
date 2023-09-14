@@ -114,9 +114,9 @@ def run_executor() -> str:
        return 'Password is required to use web app.'
     if json_data['password'] != WEB_APP_PASSWORD:
        return 'Access denied - invalid password.'
+    executor = Thread(target=call_endpoints)
     executor.start()
     return 'Success.'
 
 if __name__ == '__main__':
-  executor = Thread(target=call_endpoints)
   web_app.run(host=WEB_APP_HOST, port=WEB_APP_PORT)
