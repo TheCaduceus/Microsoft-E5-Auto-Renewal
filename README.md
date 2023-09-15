@@ -107,7 +107,13 @@ python main.py
 * Setup a cron-job using [cron-job.org](https://cron-job.org) for every 15 minutes with below configuration.
   * **URL:** `https://YourReplURL.co/call`
   * **Interval:** 15 Minutes.
+    ```
+    */15 * * * *
+    ``` 
   * **Header:** `Content-Type` as key & `application/json` as value.
+    ```json
+    {"Content-Type":"application/json"}
+    ```
   * **Request Method:** `POST`
   * **Request Body:** `{"password":"YourPasswordHere"}`
 
