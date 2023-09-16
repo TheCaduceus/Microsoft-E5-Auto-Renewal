@@ -29,7 +29,7 @@ basicConfig(
 )
 logger = getLogger('server')
 
-web_app = Flask(__name__)
+web_server = Flask(__name__)
 web_client = httpx_client()
 
 auth_endpoint= "https://login.microsoftonline.com/common/oauth2/v2.0/token"
@@ -54,7 +54,7 @@ endpoints = [
     'https://graph.microsoft.com/v1.0/sites/root/drives'
 ]
 
-def acquire_access_token() -> str:
+def acquire_access_token(REFRESH_TOKEN:str=REFRESH_TOKEN) -> str:
     """
     Acquires the access token for the web client by making a POST request to the authentication endpoint with the provided data.
 
@@ -71,11 +71,11 @@ def acquire_access_token() -> str:
     }
     return web_client.post(auth_endpoint, data=data).json()['access_token']
 
-def call_endpoints() -> None:
+def call_endpoints(ACCESS_TOKEN:str) -> None:
     shuffle(endpoints)
     web_client.headers.update(
         {
-            'Authorization': acquire_access_token(),
+            'Authorization': ACCESS_TOKEN,
             'Content-Type': 'application/json'
         }
     )
@@ -87,36 +87,43 @@ def call_endpoints() -> None:
         except Exception:
             pass
 
-@web_app.route("/")
-def home():
+@web_server.route("/")
+def home() -> str:
     return 'Server is up!'
 
-@web_app.errorhandler(400)
-def invalid_request(e):
-  return 'Invalid request.'
+@web_server.errorhandler(400)
+def invalid_request(e) -> str:
+    return 'Invalid request.'
 
-@web_app.errorhandler(404)
-def not_found(e):
-  return 'Resource not found.'
+@web_server.errorhandler(404)
+def not_found(e) -> str:
+    return 'Resource not found.'
 
-@web_app.errorhandler(405)
-def invalid_method(e):
-  return 'Invalid method.'
+@web_server.errorhandler(405)
+def invalid_method(e) -> str:
+    return 'Invalid method.'
 
-@web_app.errorhandler(415)
-def no_data(e):
-   return 'No json data passed.'
+@web_server.errorhandler(415)
+def no_data(e) -> str:
+    return 'No json data passed.'
 
-@web_app.route('/call', methods=['POST'])
+@web_server.route('/call', methods=['POST'])
 def run_executor() -> str:
     json_data = request.json
-    if 'password' not in json_data.keys():
-       return 'Password is required to use web app.'
-    if json_data['password'] != WEB_APP_PASSWORD:
-       return 'Access denied - invalid password.'
-    executor = Thread(target=call_endpoints)
+    password = json_data.get('password')
+    if not password:
+        return 'Password is required to use web app.'
+    if password != WEB_APP_PASSWORD:
+        return 'Access denied - invalid password.'
+    
+    refresh_token = json_data.get('refresh_token')
+    access_token = acquire_access_token(refresh_token) if refresh_token else acquire_access_token()
+    
+    executor = Thread(target=call_endpoints, args=[access_token])
     executor.start()
+    
     return 'Success.'
 
+
 if __name__ == '__main__':
-  web_app.run(host=WEB_APP_HOST, port=WEB_APP_PORT)
+    web_server.run(host=WEB_APP_HOST, port=WEB_APP_PORT)
