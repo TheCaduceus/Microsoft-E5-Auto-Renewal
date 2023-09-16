@@ -11,6 +11,7 @@
 * [**🕹 Deployment**](#deployment)
   * [Locally](#d-1)
   * [Replit](#d-2)
+* [**📋 Usage**](#usage)
 * [**⛑️ Need help!**](#help)
 * [**❤️ Credits & Thanks**](#credits)
 
@@ -110,12 +111,56 @@ python main.py
     ```
     */15 * * * *
     ``` 
-  * **Header:** `Content-Type` as key & `application/json` as value.
+  * **Header:** `{"KeyName" : "KeyValue"}`
     ```json
     {"Content-Type":"application/json"}
     ```
   * **Request Method:** `POST`
   * **Request Body:** `{"password":"YourPasswordHere"}`
+
+<a name="usage"></a>
+
+## 📋 Usage
+
+* **Ping Server:**
+
+  Send a HEAD request to server.
+
+  **INPUT:**
+  * None
+
+  **COMMAND:**
+    ```sh
+    curl -I "$ServerURL"
+    ```
+
+  **OUTPUT:**
+    ```
+    HTTP/1.1 200 OK
+    Server: Werkzeug/X.X.X Python/X.XX.X
+    Date: XXZ, XX  XXX XX:XX:XX GMT
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 13
+    Connection: close
+    ```
+* **Call Microsoft APIs:**
+
+  Command server to call Microsoft APIs on behalf of a user account.
+
+  **INPUT:**
+  * `password` (*required*) - The web app password.
+  * `refresh_token` (*optional*) - The refresh token of user account to act behalf of. By default provided refresh token in *config.py*.
+
+  **COMMAND:**
+    ```sh
+    curl -X POST -H "Content-Type: application/json" -d '{"password":"YourPassword"}' "$ServerURL/call"
+    ```
+  
+  **OUTPUT:**
+    ```
+    Success.
+    ```
+
 
 <a name="help"></a>
 
