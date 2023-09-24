@@ -7,11 +7,11 @@
   * [Python & Git](#i-1)
   * [Download](#i-2)
   * [Requirements](#i-3)
-* [**📝 Variables**](#installation)
+* [**📝 Variables**](#variables)
 * [**🕹 Deployment**](#deployment)
   * [Locally](#d-1)
   * [Replit](#d-2)
-* [**📋 Usage**](#usage)
+* [**⏰ Cron-Job**](#cron-job)
 * [**⛑️ Need help!**](#help)
 * [**❤️ Credits & Thanks**](#credits)
 
@@ -63,8 +63,10 @@ cd Microsoft-E5-Auto-Renewal
 pip install -r requirements.txt
 ```
 
+<a name="variables"></a>
+
 ## 📝 Variables
-**Below given variables should be filled in `config.py` file or can be configured as environment variables.**
+**The variables provided below should either be completed within the config.py file or configured as environment variables.**
 * `CLIENT_ID`|`E5_CLIENT_ID`: ID of your Azure Active Directory app. `str`
   * Create an app in [Azure Active Directory](https://portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/RegisteredApps).
   * Set application permission: `files.read.all`, `files.readwrite.all`, `sites.read.all`, `sites.readwrite.all`, `user.read.all`, `user.readwrite.all`, `directory.read.all`, `directory.readwrite.all`, `mail.read`, `mail.readwrite`, `mailboxsetting.read`, and `mailboxsetting.readwrite`.
@@ -75,6 +77,7 @@ pip install -r requirements.txt
 * `REFRESH_TOKEN`|`E5_REFRESH_TOKEN`: Refresh token for your admin account. `str`
   * Install [rclone](https://rclone.org).
   * In CLI, run:
+
     ```
     rclone authorize "onedrive" "ClientID" "ClientSecret"
     ```
@@ -94,7 +97,7 @@ pip install -r requirements.txt
 
 <a name="d-1"></a>
 
-**1.Running locally:** *(Not ideal for production)*
+**1.Running locally:**
 ```
 python main.py
 ```
@@ -105,72 +108,46 @@ python main.py
 * Fork [Microsoft-E5-Auto-Renewal](https://replit.com/@TheCaduceus/Microsoft-E5-Auto-Renewal) repl.
 * Fill `config.py` or set given environment variables. ***Be aware! directly filling `config.py` can leak your tokens.***
 * Run your repl and copy the generated endpoint.
-* Setup a cron-job using [cron-job.org](https://cron-job.org) for every 15 minutes with below configuration.
-  * **URL:** `https://YourReplURL.co/call`
-  * **Interval:** 15 Minutes.
+
+<a name="cron-job"></a>
+
+## ⏰ Cron-Job
+**The Cron-Job is set to instruct our web server to invoke Microsoft APIs at regular intervals. To ensure proper functionality, the configuration of this cron-job must align with the following settings:**
+
+* **URL**: Your server address, can be an FQDN or an IP address followed by `/call.`.
+  * In case of local deployment (private IP), you must setup cron-job on the same local network or reverse DNS.
+
     ```
-    */15 * * * *
-    ``` 
-  * **Header:** `{"KeyName" : "KeyValue"}`
+    https://example.com/call
+    http://127.0.0.1:8080/call
+    ```
+
+* **Interval**: 15 minutes - 8 hours.
+  * A too-small interval can lead to API flooding issues.
+* **Header**:
+
     ```json
     {"Content-Type":"application/json"}
     ```
-  * **Request Method:** `POST`
-  * **Request Body:** `{"password":"YourPasswordHere"}`
 
-<a name="usage"></a>
+* **Request Method**:
+  * `/` - GET / HEAD.
+  * `/call` - POST.
+* **Request Body: (as Json)**
+  * `password` (*required*) - Your `WEB_APP_PASSWORD` to ensure that this request originates from a trusted source.
+  * `refresh_token` (*optional*) - The refresh token of the user account to act behalf of. By default, the refresh token provided in config.py.
 
-## 📋 Usage
-
-* **Ping Server:**
-
-  Send a HEAD request to server.
-
-  **INPUT:**
-  * None
-
-  **COMMAND:**
-    ```sh
-    curl -I "$ServerURL"
+    ```json
+    {
+      "password": "RequiredPassword",
+      "refresh_token": "OptionalRefreshToken"
+    }
     ```
-
-  **OUTPUT:**
-    ```
-    HTTP/1.1 200 OK
-    Server: Werkzeug/X.X.X Python/X.XX.X
-    Date: XXZ, XX  XXX XX:XX:XX GMT
-    Content-Type: text/html; charset=utf-8
-    Content-Length: 13
-    Connection: close
-    ```
-* **Call Microsoft APIs:**
-
-  Command server to call Microsoft APIs on behalf of a user account.
-
-  **INPUT:**
-  * `password` (*required*) - The web app password.
-  * `refresh_token` (*optional*) - The refresh token of user account to act behalf of. By default provided refresh token in *config.py*.
-
-  **COMMAND:**
-    ```sh
-    curl -X POST -H "Content-Type: application/json" -d '{"password":"YourPassword"}' "$ServerURL/call"
-    ```
-  
-  **OUTPUT:**
-    ```
-    Success.
-    ```
-
 
 <a name="help"></a>
 
 ## ⛑️ Need help!
-
-- Create an [issue](https://github.com/TheCaduceus/tg-upload/issues) on GitHub.
-- [Subscribe](https://t.me/TheCaduceusOfficial) Telegram channel.
 - Ask questions or doubts [here](https://t.me/DrDiscussion).
-- Send a [personal message](https://t.me/TheCaduceusHere) to developer on Telegram.
-- Tag on [Twitter](https://twitter.com/BeingDrCaduceus).
 
 <a name="credits"></a>
 
