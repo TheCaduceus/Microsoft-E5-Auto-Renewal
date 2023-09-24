@@ -112,9 +112,9 @@ python main.py
 <a name="cron-job"></a>
 
 ## ⏰ Cron-Job
-**The Cron-Job is set to instruct our web server to invoke Microsoft APIs at regular intervals. To ensure proper functionality, the configuration of this cron-job must align with the following settings:**
+**The Cron-Job will instruct our web server to invoke Microsoft APIs at regular intervals. To ensure proper functionality, the configuration of the cron-job must align with the following settings:**
 
-* **URL**: Your server address, can be an FQDN or an IP address followed by `/call.`.
+* **URL**: Your server address, can be an FQDN or an IP address followed by `/call`.
   * In case of local deployment (private IP), you must setup cron-job on the same local network or reverse DNS.
 
     ```
