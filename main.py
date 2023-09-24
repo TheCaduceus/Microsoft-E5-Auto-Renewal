@@ -23,8 +23,8 @@ from config import (
 
 basicConfig(
     level=INFO,
-    datefmt="%d/%m/%Y %H:%M:%S",
-    format="[%(asctime)s][%(name)s][%(levelname)s] -> %(message)s",
+    datefmt='%d/%m/%Y %H:%M:%S',
+    format='[%(asctime)s][%(name)s][%(levelname)s] -> %(message)s',
     handlers=[FileHandler('event-log.txt'), StreamHandler()]
 )
 logger = getLogger('server')
@@ -32,7 +32,7 @@ logger = getLogger('server')
 web_server = Flask(__name__)
 web_client = httpx_client()
 
-auth_endpoint= "https://login.microsoftonline.com/common/oauth2/v2.0/token"
+auth_endpoint= 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
 endpoints = [
     'https://graph.microsoft.com/v1.0/me/drive/root',
     'https://graph.microsoft.com/v1.0/me/drive',
@@ -54,7 +54,7 @@ endpoints = [
     'https://graph.microsoft.com/v1.0/sites/root/drives'
 ]
 
-def acquire_access_token(REFRESH_TOKEN:str=REFRESH_TOKEN) -> str:
+def acquire_access_token(refresh_token:str|None=None) -> str:
     """
     Acquires the access token for the web client by making a POST request to the authentication endpoint with the provided data.
 
@@ -64,7 +64,7 @@ def acquire_access_token(REFRESH_TOKEN:str=REFRESH_TOKEN) -> str:
     web_client.headers.update({'Content-Type': 'application/x-www-form-urlencoded'})
     data = {
         'grant_type': 'refresh_token',
-        'refresh_token': REFRESH_TOKEN,
+        'refresh_token': refresh_token or REFRESH_TOKEN,
         'client_id': CLIENT_ID,
         'client_secret': CLIENT_SECRET,
         'redirect_uri': 'http://localhost:53682/'
@@ -92,20 +92,20 @@ def home() -> str:
     return 'Server is up!'
 
 @web_server.errorhandler(400)
-def invalid_request(e) -> str:
-    return 'Invalid request.'
+def invalid_request(_) -> str:
+    return 'Invalid request.', 400
 
 @web_server.errorhandler(404)
-def not_found(e) -> str:
-    return 'Resource not found.'
+def not_found(_) -> str:
+    return 'Resource not found.', 404
 
 @web_server.errorhandler(405)
-def invalid_method(e) -> str:
-    return 'Invalid method.'
+def invalid_method(_) -> str:
+    return 'Invalid method.', 405
 
 @web_server.errorhandler(415)
-def no_data(e) -> str:
-    return 'No json data passed.'
+def no_data(_) -> str:
+    return 'No json data passed.', 415
 
 @web_server.route('/call', methods=['POST'])
 def run_executor() -> str:
@@ -117,7 +117,7 @@ def run_executor() -> str:
         return 'Access denied - invalid password.'
     
     refresh_token = json_data.get('refresh_token')
-    access_token = acquire_access_token(refresh_token) if refresh_token else acquire_access_token()
+    access_token = acquire_access_token(refresh_token)
     
     executor = Thread(target=call_endpoints, args=[access_token])
     executor.start()
