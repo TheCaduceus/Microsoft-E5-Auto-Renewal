@@ -58,8 +58,11 @@ def acquire_access_token(refresh_token:str|None=None) -> str:
     """
     Acquires the access token for the web client by making a POST request to the authentication endpoint with the provided data.
 
+    Args:
+        refresh_token (str | None): The refresh token used to acquire the access token. If None, the default refresh token will be used.
+
     Returns:
-        The access token.
+        str: The access token.
     """
     web_client.headers.update({'Content-Type': 'application/x-www-form-urlencoded'})
     data = {
@@ -69,6 +72,7 @@ def acquire_access_token(refresh_token:str|None=None) -> str:
         'client_secret': CLIENT_SECRET,
         'redirect_uri': 'http://localhost:53682/'
     }
+
     return web_client.post(auth_endpoint, data=data).json()['access_token']
 
 def call_endpoints(ACCESS_TOKEN:str) -> None:
@@ -89,7 +93,7 @@ def call_endpoints(ACCESS_TOKEN:str) -> None:
 
 @web_server.route("/")
 def home() -> str:
-    return 'Server is up!'
+    return 'Server is up!', 200
 
 @web_server.errorhandler(400)
 def invalid_request(_) -> str:
@@ -112,9 +116,9 @@ def run_executor() -> str:
     json_data = request.json
     password = json_data.get('password')
     if not password:
-        return 'Password is required to use web app.'
+        return 'Password is required to use web app.', 401
     if password != WEB_APP_PASSWORD:
-        return 'Access denied - invalid password.'
+        return 'Access denied - invalid password.', 403
     
     refresh_token = json_data.get('refresh_token')
     access_token = acquire_access_token(refresh_token)
@@ -122,7 +126,7 @@ def run_executor() -> str:
     executor = Thread(target=call_endpoints, args=[access_token])
     executor.start()
     
-    return 'Success.'
+    return 'Success.', 200
 
 
 if __name__ == '__main__':
