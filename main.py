@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, Response, send_file
 from threading import Thread
 from time import sleep
 from httpx import Client as httpx_client
@@ -33,6 +33,7 @@ web_server = Flask(__name__)
 web_client = httpx_client()
 
 auth_endpoint= 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
+server_stats = {'version': 1.2,'totalRequests': 0, 'totalSuccess': 0, 'totalErrors': 0 }
 endpoints = [
     'https://graph.microsoft.com/v1.0/me/drive/root',
     'https://graph.microsoft.com/v1.0/me/drive',
@@ -75,11 +76,20 @@ def acquire_access_token(refresh_token:str|None=None) -> str:
 
     return web_client.post(auth_endpoint, data=data).json()['access_token']
 
-def call_endpoints(ACCESS_TOKEN:str) -> None:
+def call_endpoints(access_token:str) -> None:
+    """
+    Shuffles the endpoints list, updates the headers of the web client with the provided access token, and makes GET requests to each endpoint in the shuffled list with a delay between each request.
+
+    Args:
+        access_token (str): The access token used for authorization.
+
+    Returns:
+        None
+    """
     shuffle(endpoints)
     web_client.headers.update(
         {
-            'Authorization': ACCESS_TOKEN,
+            'Authorization': access_token,
             'Content-Type': 'application/json'
         }
     )
@@ -93,7 +103,16 @@ def call_endpoints(ACCESS_TOKEN:str) -> None:
 
 @web_server.route("/")
 def home() -> str:
-    return 'Server is up!', 200
+    return server_stats, 200
+
+@web_server.after_request
+def requests_counter(response:Response):
+    server_stats['totalRequests'] += 1
+    if response.status_code == 201:
+        server_stats['totalSuccess'] += 1
+    elif response.status_code >= 400:
+        server_stats['totalErrors'] += 1
+    return response
 
 @web_server.errorhandler(400)
 def invalid_request(_) -> str:
@@ -126,8 +145,17 @@ def run_executor() -> str:
     executor = Thread(target=call_endpoints, args=[access_token])
     executor.start()
     
-    return 'Success.', 200
+    return 'Success - new thread created.', 201
 
+@web_server.route('/getLog')
+def send_logs():
+    password = request.args.get('password')
+    if not password:
+        return 'Password is required to download log file.', 401
+    if password != WEB_APP_PASSWORD:
+        return 'Access denied - invalid password.', 403
+    
+    return send_file('event-log.txt')
 
 if __name__ == '__main__':
     web_server.run(host=WEB_APP_HOST, port=WEB_APP_PORT)
