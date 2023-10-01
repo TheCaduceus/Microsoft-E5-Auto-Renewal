@@ -11,6 +11,7 @@
 * [**🕹 Deployment**](#deployment)
   * [Locally](#d-1)
   * [Replit](#d-2)
+* [**🌐 Routes**](#routes)
 * [**⏰ Cron-Job**](#cron-job)
 * [**⛑️ Need help!**](#help)
 * [**❤️ Credits & Thanks**](#credits)
@@ -109,6 +110,59 @@ python main.py
 * Fill `config.py` or set given environment variables. ***Be aware! directly filling `config.py` can leak your tokens.***
 * Run your repl and copy the generated endpoint.
 
+<a name="routes"></a>
+
+## 🌐 Routes
+
+* **`/`**
+
+  Retrieve server statistics in JSON format, including the server version, total received requests, total successful requests, and the total number of errors encountered thus far.
+
+  * **Request Methods:**
+    * `GET` - Get server statistics as JSON.
+    * `HEAD` - Ping the server.
+  * **Headers:**
+    * None.
+  * **URL Parameters:**
+    * None.
+  * **Example:**
+      ```shell
+      curl http://127.0.0.1:8080/
+      ```
+
+* **`/call`**
+
+  Command server to call Microsoft APIs on behalf of a user account.
+
+  * **Request Methods:**
+    * `POST` - Create a new activity thread that sends a ping to all Microsoft APIs once.
+  * **Headers:**
+    ```json
+    {"Content-Type":"application/json"}
+    ```
+  * **Request Body: (as JSON)**
+    * `password` (*required*) - The web app password.
+    * `refresh_token` (*optional*) - The refresh token of user account to act behalf of. By default provided refresh token in *config.py*.
+  * **Example:**
+      ```shell
+      curl -X POST -H "Content-Type: application/json" -d '{"password":"RequiredPassword", "refresh_token": "OptionalRefreshToken"}' "http://127.0.0.1:8080/call"
+      ```
+
+* **`/getLog`**
+
+    Generate download request for current log file.
+
+  * **Request Methods:**
+    * `GET` - Get server's log file.
+  * **Headers:**
+    * None.
+  * **URL Parameters:**
+    * `password` (*required*) - The web app password.
+  * **Example**
+      ```shell
+      curl -o "event-log.txt" "http://127.0.0.1:8080/getLog?password=1234"
+      ```
+
 <a name="cron-job"></a>
 
 ## ⏰ Cron-Job
@@ -130,9 +184,7 @@ python main.py
     {"Content-Type":"application/json"}
     ```
 
-* **Request Method**:
-  * `/` - GET / HEAD.
-  * `/call` - POST.
+* **Request Method**: `POST`
 * **Request Body: (as Json)**
   * `password` (*required*) - Your `WEB_APP_PASSWORD` to ensure that this request originates from a trusted source.
   * `refresh_token` (*optional*) - The refresh token of the user account to act behalf of. By default, the refresh token provided in config.py.
