@@ -102,7 +102,7 @@ def call_endpoints(access_token:str) -> None:
             pass
 
 @web_server.route("/")
-def home() -> str:
+def home() -> Response:
     return server_stats, 200
 
 @web_server.after_request
@@ -115,23 +115,23 @@ def requests_counter(response:Response):
     return response
 
 @web_server.errorhandler(400)
-def invalid_request(_) -> str:
+def invalid_request(_) -> Response:
     return 'Invalid request.', 400
 
 @web_server.errorhandler(404)
-def not_found(_) -> str:
+def not_found(_) -> Response:
     return 'Resource not found.', 404
 
 @web_server.errorhandler(405)
-def invalid_method(_) -> str:
+def invalid_method(_) -> Response:
     return 'Invalid method.', 405
 
 @web_server.errorhandler(415)
-def no_data(_) -> str:
+def no_data(_) -> Response:
     return 'No json data passed.', 415
 
 @web_server.route('/call', methods=['POST'])
-def run_executor() -> str:
+def run_executor() -> Response:
     json_data = request.json
     password = json_data.get('password')
     if not password:
@@ -148,7 +148,7 @@ def run_executor() -> str:
     return 'Success - new thread created.', 201
 
 @web_server.route('/getLog')
-def send_logs():
+def send_logs() -> Response:
     password = request.args.get('password')
     if not password:
         return 'Password is required to download log file.', 401
