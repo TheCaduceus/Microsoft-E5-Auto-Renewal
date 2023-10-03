@@ -8,7 +8,8 @@ from logging import (
     basicConfig,
     FileHandler, 
     StreamHandler,
-    INFO
+    INFO,
+    WARNING
 )
 
 from config import (
@@ -27,7 +28,8 @@ basicConfig(
     format='[%(asctime)s][%(name)s][%(levelname)s] -> %(message)s',
     handlers=[FileHandler('event-log.txt'), StreamHandler()]
 )
-logger = getLogger('server')
+logger = getLogger('main')
+getLogger('werkzeug').setLevel(WARNING)
 
 web_server = Flask(__name__)
 web_client = httpx_client()
