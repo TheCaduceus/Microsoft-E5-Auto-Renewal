@@ -35,7 +35,7 @@ web_server = Flask(__name__)
 web_client = httpx_client()
 
 auth_endpoint= 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
-server_stats = {'version': 1.2,'totalRequests': 0, 'totalSuccess': 0, 'totalErrors': 0 }
+server_stats = {'version': 1.4,'totalRequests': 0, 'totalSuccess': 0, 'totalErrors': 0 }
 endpoints = [
     'https://graph.microsoft.com/v1.0/me/drive/root',
     'https://graph.microsoft.com/v1.0/me/drive',
