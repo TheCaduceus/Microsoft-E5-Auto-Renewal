@@ -34,8 +34,8 @@ getLogger('werkzeug').setLevel(WARNING)
 web_server = Flask(__name__)
 web_client = httpx_client()
 
+server_stats = {'version': 1.5,'totalRequests': 0, 'totalSuccess': 0, 'totalErrors': 0}
 auth_endpoint= 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
-server_stats = {'version': 1.4,'totalRequests': 0, 'totalSuccess': 0, 'totalErrors': 0 }
 endpoints = [
     'https://graph.microsoft.com/v1.0/me/drive/root',
     'https://graph.microsoft.com/v1.0/me/drive',
@@ -149,15 +149,16 @@ def run_executor() -> Response:
     
     return 'Success - new thread created.', 201
 
-@web_server.route('/getLog')
+@web_server.route('/logs')
 def send_logs() -> Response:
     password = request.args.get('password')
+    as_file = request.args.get('as_file', 'False') in {'TRUE','True','true'}
     if not password:
         return 'Password is required to download log file.', 401
     if password != WEB_APP_PASSWORD:
         return 'Access denied - invalid password.', 403
     
-    return send_file('event-log.txt')
+    return send_file('event-log.txt', as_attachment=as_file)
 
 if __name__ == '__main__':
     web_server.run(host=WEB_APP_HOST, port=WEB_APP_PORT)
