@@ -34,7 +34,7 @@ getLogger('werkzeug').setLevel(WARNING)
 web_server = Flask(__name__)
 web_client = httpx_client()
 
-server_stats = {'version': 1.2,'totalRequests': 0, 'totalSuccess': 0, 'totalErrors': 0}
+server_stats = {'version': 1.5,'totalRequests': 0, 'totalSuccess': 0, 'totalErrors': 0}
 auth_endpoint= 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
 endpoints = [
     'https://graph.microsoft.com/v1.0/me/drive/root',
