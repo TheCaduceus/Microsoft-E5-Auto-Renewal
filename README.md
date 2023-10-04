@@ -123,7 +123,7 @@ python main.py
     * `HEAD` - Ping the server.
   * **Headers:**
     * None.
-  * **URL Parameters:**
+  * **Parameters:**
     * None.
   * **Example:**
       ```shell
@@ -140,7 +140,7 @@ python main.py
     ```json
     {"Content-Type":"application/json"}
     ```
-  * **Request Body: (as JSON)**
+  * **Parameters: (as JSON)**
     * `password` (*required*) - The web app password.
     * `refresh_token` (*optional*) - The refresh token of user account to act behalf of. By default provided refresh token in *config.py*.
   * **Example:**
@@ -148,7 +148,7 @@ python main.py
       curl -X POST -H "Content-Type: application/json" -d '{"password":"RequiredPassword", "refresh_token": "OptionalRefreshToken"}' "http://127.0.0.1:8080/call"
       ```
 
-* **`/getLog`**
+* **`/logs`**
 
     Generate download request for current log file.
 
@@ -156,11 +156,12 @@ python main.py
     * `GET` - Get server's log file.
   * **Headers:**
     * None.
-  * **URL Parameters:**
+  * **Parameters: (in URL)**
     * `password` (*required*) - The web app password.
+    * `as_file` (*optional*) - By default, this parameter is set to False, allowing you to choose whether to send logs as a file with options True or False.
   * **Example**
       ```shell
-      curl -o "event-log.txt" "http://127.0.0.1:8080/getLog?password=1234"
+      curl -o "event-log.txt" "http://127.0.0.1:8080/logs?password=1234&as_file=True"
       ```
 
 <a name="cron-job"></a>
@@ -185,7 +186,7 @@ python main.py
     ```
 
 * **Request Method**: `POST`
-* **Request Body: (as Json)**
+* **Parameters: (as Json)**
   * `password` (*required*) - Your `WEB_APP_PASSWORD` to ensure that this request originates from a trusted source.
   * `refresh_token` (*optional*) - The refresh token of the user account to act behalf of. By default, the refresh token provided in config.py.
 
