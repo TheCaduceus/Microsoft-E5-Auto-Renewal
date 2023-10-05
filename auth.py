@@ -63,7 +63,7 @@ def not_found(_) -> Response:
     return 'Resource not found.', 404
 
 @web_server.route('/')
-def home() -> Response:
+def callback() -> Response:
     code = request.args.get('code', None)
     if not code:
         return invalid_request()
@@ -80,7 +80,7 @@ def home() -> Response:
     return resp, 200
 
 @web_server.route('/auth')
-def callback() -> Response:
+def auth() -> Response:
     return redirect(auth_endpoint)
     
 
