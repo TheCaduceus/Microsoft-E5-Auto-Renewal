@@ -70,18 +70,34 @@ pip install -r requirements.txt
 **The variables provided below should either be completed within the config.py file or configured as environment variables.**
 * `CLIENT_ID`|`E5_CLIENT_ID`: ID of your Azure Active Directory app. `str`
   * Create an app in [Azure Active Directory](https://portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/RegisteredApps).
-  * Set application permission: `files.read.all`, `files.readwrite.all`, `sites.read.all`, `sites.readwrite.all`, `user.read.all`, `user.readwrite.all`, `directory.read.all`, `directory.readwrite.all`, `mail.read`, `mail.readwrite`, `mailboxsetting.read`, and `mailboxsetting.readwrite`.
+  * Set application permissions:
+    ```
+    Directory.Read.All,
+    Directory.ReadWrite.All,
+    Files.Read,
+    Files.Read.All,
+    Files.ReadWrite,
+    Files.ReadWrite.All,
+    Mail.Read,
+    Mail.ReadWrite,
+    MailboxSettings.Read,
+    MailboxSettings.ReadWrite,
+    Sites.Read.All,
+    Sites.ReadWrite.All,
+    User.Read,
+    User.Read.All,
+    User.ReadWrite.All
+    ```
   * Choose application type as 'Web' & set Redirect URL to `http://localhost:53682/`.
   * Copy the Application (client) ID.
 * `CLIENT_SECRET`|`E5_CLIENT_SECRET`: Secret of your Azure Active Directory app. `str`
   * In your  Azure Active Directory app overview, navigate to Client credentials and create secret.
 * `REFRESH_TOKEN`|`E5_REFRESH_TOKEN`: Refresh token for your admin account. `str`
-  * Install [rclone](https://rclone.org).
   * In CLI, run:
-
     ```
-    rclone authorize "onedrive" "ClientID" "ClientSecret"
+    python auth.py YourClientID YourClientSecret
     ```
+  * Follow on-screen instructions.
   * From output, copy the value of `refresh_token` key.
 * `WEB_APP_PASSWORD`|`E5_WEB_APP_PASSWORD`: Strong password to protect critical routes of your web server. `str`
   * Keep it strong and don't share it.
