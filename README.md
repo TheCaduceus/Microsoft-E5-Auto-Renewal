@@ -1,5 +1,5 @@
 <div align="center"><h1>Microsoft E5 Auto Renewal</h1>
-<b>An open-source Python program made using <a href="https://github.com/pallets/flask">Flask framework</a> for automatic renewal of Microsoft's Developer E5 subscription.</b></div><br>
+<b>An open-source Python program made using <a href="https://github.com/pallets/quart">Quart</a> & <a href="https://github.com/encode/uvicorn">Uvicorn</a> for automatic renewal of Microsoft's Developer E5 subscription.</b></div><br>
 
 ## **📑 INDEX**
 
@@ -130,13 +130,10 @@ python main.py
 
 ## 🌐 Routes
 
-* **`/`**
+* **/** - GET
 
   Retrieve server statistics in JSON format, including the server version, total received requests, total successful requests, and the total number of errors encountered thus far.
 
-  * **Request Methods:**
-    * `GET` - Get server statistics as JSON.
-    * `HEAD` - Ping the server.
   * **Headers:**
     * None.
   * **Parameters:**
@@ -146,12 +143,10 @@ python main.py
       curl http://127.0.0.1:8080/
       ```
 
-* **`/call`**
+* **/call** - POST
 
   Command server to call Microsoft APIs on behalf of a user account.
 
-  * **Request Methods:**
-    * `POST` - Create a new activity thread that sends a ping to all Microsoft APIs once.
   * **Headers:**
     ```json
     {"Content-Type":"application/json"}
@@ -164,12 +159,10 @@ python main.py
       curl -X POST -H "Content-Type: application/json" -d '{"password":"RequiredPassword", "refresh_token": "OptionalRefreshToken"}' "http://127.0.0.1:8080/call"
       ```
 
-* **`/logs`**
+* **/logs** - GET
 
     Generate download request for current log file.
 
-  * **Request Methods:**
-    * `GET` - Get server's log file.
   * **Headers:**
     * None.
   * **Parameters: (in URL)**

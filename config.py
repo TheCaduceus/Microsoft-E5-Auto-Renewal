@@ -11,3 +11,29 @@ WEB_APP_PASSWORD = "" or env.get("E5_WEB_APP_PASSWORD")
 WEB_APP_HOST = "0.0.0.0" or env.get("E5_WEB_APP_HOST")
 WEB_APP_PORT = 8080 or int(env.get("PORT"))
 TIME_DELAY = 3 or int(env.get("E5_TIME_DELAY"))
+
+# WEB SERVER LOGGING CONFIGURATION
+LOGGER_CONFIG_JSON = {
+    'version': 1,
+    'formatters': {
+        'default': {
+            'format': '[%(asctime)s][%(name)s][%(levelname)s] -> %(message)s',
+            'datefmt': '%d/%m/%Y %H:%M:%S'
+        },
+    },
+    'handlers': {
+        'file_handler': {
+            'class': 'logging.FileHandler',
+            'filename': 'event-log.txt',
+            'formatter': 'default'
+        },
+        'stream_handler': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'default'
+        }
+    },
+    'root': {
+        'level': 'INFO',
+        'handlers': ['file_handler', 'stream_handler']
+    }
+}
