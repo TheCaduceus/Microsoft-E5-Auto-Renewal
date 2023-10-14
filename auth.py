@@ -1,6 +1,5 @@
-import uvicorn
-
-from quart import Quart, request, redirect, Response
+from uvicorn import run
+from quart import Quart, request, redirect, Response, abort
 from sys import argv, exit as sys_exit
 from httpx import AsyncClient as httpx_client
 from webbrowser import open as open_link
@@ -13,22 +12,22 @@ if len(argv) < 3:
     sys_exit(1)
 
 SCOPES = [
-    "Directory.Read.All",
-    "Directory.ReadWrite.All",
-    "Files.Read",
-    "Files.Read.All",
-    "Files.ReadWrite",
-    "Files.ReadWrite.All",
-    "Mail.Read",
-    "Mail.ReadWrite",
-    "MailboxSettings.Read",
-    "MailboxSettings.ReadWrite",
-    "offline_access",
-    "Sites.Read.All",
-    "Sites.ReadWrite.All",
-    "User.Read",
-    "User.Read.All",
-    "User.ReadWrite.All"
+    'Directory.Read.All',
+    'Directory.ReadWrite.All',
+    'Files.Read',
+    'Files.Read.All',
+    'Files.ReadWrite',
+    'Files.ReadWrite.All',
+    'Mail.Read',
+    'Mail.ReadWrite',
+    'MailboxSettings.Read',
+    'MailboxSettings.ReadWrite',
+    'offline_access',
+    'Sites.Read.All',
+    'Sites.ReadWrite.All',
+    'User.Read',
+    'User.Read.All',
+    'User.ReadWrite.All'
 ]
 auth_endpoint = (
     'https://login.microsoftonline.com/common/oauth2/v2.0/authorize'
@@ -49,7 +48,7 @@ async def before_serve() -> None:
     open_link('http://127.0.0.1:53682/auth', new=1)
 
 @web_server.errorhandler(400)
-async def invalid_request(_=None) -> Response:
+async def invalid_request(_) -> Response:
     return 'Invalid request.', 400
 
 @web_server.errorhandler(404)
@@ -58,10 +57,7 @@ async def not_found(_) -> Response:
 
 @web_server.route('/')
 async def callback() -> Response:
-    code = request.args.get('code', None)
-    if not code:
-        return await invalid_request()
-    
+    code = request.args.get('code', None) or abort(400)
     resp = (await web_client.post(token_url, data={
         'client_id': argv[1],
         'client_secret': argv[2],
@@ -77,7 +73,7 @@ async def auth() -> Response:
     return redirect(auth_endpoint)
     
 if __name__ == '__main__':
-    uvicorn.run(
+    run(
         app=web_server,
         host='0.0.0.0',
         port=53682,

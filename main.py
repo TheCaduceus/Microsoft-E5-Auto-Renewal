@@ -1,8 +1,14 @@
-import uvicorn
-
-from quart import Quart, request, Response, send_file
+from uvicorn import run
+from quart import (
+    Quart,
+    request,
+    Response as quartResponse,
+    send_file,
+    abort
+)
+from werkzeug.exceptions import HTTPException
 from asyncio import sleep as async_sleep
-from httpx import AsyncClient as httpx_client, Response as httpx_Response
+from httpx import AsyncClient as httpx_client, Response as httpxResponse
 from random import shuffle
 from logging import getLogger
 
@@ -20,7 +26,7 @@ from config import (
 web_server = Quart(__name__)
 web_client = httpx_client()
 
-server_stats = {'version': 1.6,'totalRequests': 0, 'totalSuccess': 0, 'totalErrors': 0}
+server_stats = {'version': 1.7,'totalRequests': 0, 'totalSuccess': 0, 'totalErrors': 0}
 token_endpoint = 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
 endpoints = [
     'https://graph.microsoft.com/v1.0/me/drive/root',
@@ -43,7 +49,7 @@ endpoints = [
     'https://graph.microsoft.com/v1.0/sites/root/drives'
 ]
 
-async def log_response(response:httpx_Response) -> None:
+async def log_response(response:httpxResponse) -> None:
     request = response.request
     logger.info(f'HTTP Request: {request.method} {request.url} {response.http_version} {response.status_code} {response.reason_phrase}')
 
@@ -57,7 +63,7 @@ async def acquire_access_token(refresh_token:str|None=None) -> str:
         'redirect_uri': 'http://localhost:53682/'
     }
 
-    return (await web_client.post(token_endpoint, data=data)).json()['access_token']
+    return (await web_client.post(token_endpoint, data=data)).json().get('access_token') or abort(401, "Failed to acquire the access token. Please verify your refresh token and try again.")
 
 async def call_endpoints(access_token:str) -> None:
     shuffle(endpoints)
@@ -93,25 +99,47 @@ async def before_request() -> None:
     server_stats['totalRequests'] += 1
 
 @web_server.after_request
-async def after_request(response:Response) -> Response:
+async def after_request(response:quartResponse) -> quartResponse:
     if response.status_code == 201:
         server_stats['totalSuccess'] += 1
     elif response.status_code >= 400:
         server_stats['totalErrors'] += 1
     return response
 
+@web_server.errorhandler(400)
+async def invalid_request(_) -> quartResponse:
+    return 'Invalid request.', 400
+
+@web_server.errorhandler(401)
+async def authentication_required(error:HTTPException) -> quartResponse:
+    return error.description or 'Password is required to use this route.', 401
+
+@web_server.errorhandler(403)
+async def access_denied(_) -> quartResponse:
+    return 'Access denied - invalid password.', 403
+
+@web_server.errorhandler(404)
+async def not_found(_) -> quartResponse:
+    return 'Resource not found.', 404
+
+@web_server.errorhandler(405)
+async def invalid_method(_) -> quartResponse:
+    return 'Invalid method.', 405
+
+@web_server.errorhandler(415)
+async def no_data(_) -> quartResponse:
+    return 'No json data passed.', 415
+
 @web_server.route("/")
-async def home() -> Response:
+async def home() -> quartResponse:
     return server_stats, 200
 
 @web_server.route('/call', methods=['POST'])
-async def create_task() -> Response:
-    json_data = await request.json
-    password = json_data.get('password')
-    if not password:
-        return 'Password is required to use web app.', 401
+async def create_task() -> quartResponse:
+    json_data = await request.json or abort(415)
+    password = json_data.get('password') or abort(401, None)
     if password != WEB_APP_PASSWORD:
-        return 'Access denied - invalid password.', 403
+        abort(403)
     
     refresh_token = json_data.get('refresh_token')
     access_token = await acquire_access_token(refresh_token)
@@ -121,34 +149,16 @@ async def create_task() -> Response:
     return 'Success - new task created.', 201
 
 @web_server.route('/logs')
-async def send_logs() -> Response:
-    password = request.args.get('password')
+async def send_logs() -> quartResponse:
+    password = request.args.get('password') or abort(401, None)
     as_file = request.args.get('as_file', 'False') in {'TRUE','True','true'}
-    if not password:
-        return 'Password is required to download log file.', 401
     if password != WEB_APP_PASSWORD:
-        return 'Access denied - invalid password.', 403
+        abort(403)
     
     return await send_file('event-log.txt', as_attachment=as_file)
 
-@web_server.errorhandler(400)
-async def invalid_request(_) -> Response:
-    return 'Invalid request.', 400
-
-@web_server.errorhandler(404)
-async def not_found(_) -> Response:
-    return 'Resource not found.', 404
-
-@web_server.errorhandler(405)
-async def invalid_method(_) -> Response:
-    return 'Invalid method.', 405
-
-@web_server.errorhandler(415)
-async def no_data(_) -> Response:
-    return 'No json data passed.', 415
-
 if __name__ == '__main__':
-    uvicorn.run(
+    run(
         app="main:web_server",
         host=WEB_APP_HOST,
         port=WEB_APP_PORT,
