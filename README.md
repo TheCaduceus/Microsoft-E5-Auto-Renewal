@@ -10,7 +10,8 @@
 * [**📝 Variables**](#variables)
 * [**🕹 Deployment**](#deployment)
   * [Locally](#d-1)
-  * [Replit](#d-2)
+  * [Docker](#d-2)
+  * [Replit](#d-3)
 * [**🌐 Routes**](#routes)
 * [**⏰ Cron-Job**](#cron-job)
 * [**⛑️ Need help!**](#help)
@@ -114,15 +115,27 @@ pip install -r requirements.txt
 
 <a name="d-1"></a>
 
-**1.Running locally:**
+**1.Running locally:** *(Best for testing)*
 ```
 python main.py
 ```
 
 <a name="d-2"></a>
 
-**2.Running on Replit:** *(Recommended)*
-* Fork [Microsoft-E5-Auto-Renewal](https://replit.com/@TheCaduceus/Microsoft-E5-Auto-Renewal) repl.
+**2.Using Docker:** *(Recommended)*
+* Build own Docker image:
+```
+docker build -t msft-e5-renewal .
+```
+* Run the Docker container:
+```
+docker run -p 8080:8080 msft-e5-renewal
+```
+
+<a name="d-3"></a>
+
+**3.Running on Replit:**
+* [Import](https://replit.com/github/TheCaduceus/Microsoft-E5-Auto-Renewal) Microsoft-E5-Auto-Renewal to replit.
 * Fill `config.py` or set given environment variables. ***Be aware! directly filling `config.py` can leak your tokens.***
 * Run your repl and copy the generated endpoint.
 
