@@ -11,7 +11,7 @@
 * [**🕹 Deployment**](#deployment)
   * [Locally](#d-1)
   * [Docker](#d-2)
-  * [Replit](#d-3)
+  * [Cyclic](#d-3)
 * [**🌐 Routes**](#routes)
 * [**⏰ Cron-Job**](#cron-job)
 * [**⛑️ Need help!**](#help)
@@ -104,7 +104,7 @@ pip install -r requirements.txt
   * Keep it strong and don't share it.
 * `WEB_APP_HOST`|`E5_WEB_APP_HOST`: Bind address of web server. `str`
   * By default `0.0.0.0` to run on all possible addresses.
-* `WEB_APP_PORT`|`E5_WEB_APP_PORT`: Port for web server to listen to. `int`
+* `WEB_APP_PORT`|`PORT`: Port for web server to listen to. `int`
   * By default `8080`.
 * `TIME_DELAY`|`E5_TIME_DELAY`: Time (in seconds) to wait before calling another endpoint. `int`
   * By default 3 seconds.
@@ -134,10 +134,14 @@ docker run -p 8080:8080 msft-e5-renewal
 
 <a name="d-3"></a>
 
-**3.Running on Replit:**
-* [Import](https://replit.com/github/TheCaduceus/Microsoft-E5-Auto-Renewal) Microsoft-E5-Auto-Renewal to replit.
-* Fill `config.py` or set given environment variables. ***Be aware! directly filling `config.py` can leak your tokens.***
-* Run your repl and copy the generated endpoint.
+**3.Deployment on Cyclic:** *(Easiest & Free)*
+* Sign-up on Cyclic [here](https://app.cyclic.sh/#/join/TheCaduceus).
+* Click deployment button given below:<br>
+[![Deploy to Cyclic](https://deploy.cyclic.sh/button.svg)](https://deploy.cyclic.sh/TheCaduceus/Microsoft-E5-Auto-Renewal)
+* Select `main.py` as main file and `cyclic` as branch.
+* Switch to 'Variables' tab and set all environment variables (starting with `E5_`) except `PORT` given above.
+* Click "Connect Cyclic" and it will be deployed automatically.
+* Finally, navigate to your deployed app and in 'Cron' tab set the cron-job as mentioned [here](#cron-job).
 
 <a name="routes"></a>
 
