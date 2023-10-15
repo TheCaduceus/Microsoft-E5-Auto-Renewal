@@ -141,7 +141,10 @@ docker run -p 8080:8080 msft-e5-renewal
 * Select `main.py` as main file and `cyclic` as branch.
 * Switch to 'Variables' tab and set all environment variables (starting with `E5_`) except `PORT` given above.
 * Click "Connect Cyclic" and it will be deployed automatically.
-* Finally, navigate to your deployed app and in 'Cron' tab set the cron-job as mentioned [here](#cron-job).
+* Finally, you can create cron-job using your Cyclic app endpoint as mentioned [here](#cron-job).
+
+> [!NOTE]
+> Due to the read-only file system provided by Cyclic, the /logs route is disabled.
 
 <a name="routes"></a>
 
@@ -170,6 +173,8 @@ docker run -p 8080:8080 msft-e5-renewal
     ```
   * **Parameters: (as JSON)**
     * `password` (*required*) - The web app password.
+    * `client_id` (*optional*) - ID of your Azure Active Directory app. By default provided client ID in *config.py*.
+    * `client_secret` (*optional*) - Secret of your Azure Active Directory app. By default provided client secret in *config.py*.
     * `refresh_token` (*optional*) - The refresh token of user account to act behalf of. By default provided refresh token in *config.py*.
   * **Example:**
       ```shell
