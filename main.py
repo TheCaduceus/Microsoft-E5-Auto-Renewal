@@ -26,7 +26,7 @@ from config import (
 web_server = Quart(__name__)
 web_client = httpx_client()
 
-server_stats = {'version': 1.7,'totalRequests': 0, 'totalSuccess': 0, 'totalErrors': 0}
+server_stats = {'version': 1.8,'totalRequests': 0, 'totalSuccess': 0, 'totalErrors': 0}
 token_endpoint = 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
 endpoints = [
     'https://graph.microsoft.com/v1.0/me/drive/root',
@@ -53,31 +53,32 @@ async def log_response(response:httpxResponse) -> None:
     request = response.request
     logger.info(f'HTTP Request: {request.method} {request.url} {response.http_version} {response.status_code} {response.reason_phrase}')
 
-async def acquire_access_token(refresh_token:str|None=None) -> str:
-    web_client.headers.update({'Content-Type': 'application/x-www-form-urlencoded'})
-    data = {
+async def acquire_access_token(refresh_token:str|None=None, client_id:str|None=None, client_secret:str|None=None) -> str | None:
+    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    data = \
+    {
         'grant_type': 'refresh_token',
         'refresh_token': refresh_token or REFRESH_TOKEN,
-        'client_id': CLIENT_ID,
-        'client_secret': CLIENT_SECRET,
+        'client_id': client_id or CLIENT_ID,
+        'client_secret': client_secret or CLIENT_SECRET,
         'redirect_uri': 'http://localhost:53682/'
     }
 
-    return (await web_client.post(token_endpoint, data=data)).json().get('access_token') or abort(401, "Failed to acquire the access token. Please verify your refresh token and try again.")
+    return (await web_client.post(token_endpoint, headers=headers, data=data)).json().get('access_token') or \
+        abort(401, "Failed to acquire the access token. Please verify your refresh token and try again.")
 
 async def call_endpoints(access_token:str) -> None:
     shuffle(endpoints)
-    web_client.headers.update(
+    headers = \
         {
             'Authorization': access_token,
             'Content-Type': 'application/json'
         }
-    )
 
     for endpoint in endpoints:
         await async_sleep(TIME_DELAY)
         try:
-            await web_client.get(endpoint)
+            await web_client.get(endpoint, headers=headers)
         except Exception:
             pass
 
@@ -142,7 +143,9 @@ async def create_task() -> quartResponse:
         abort(403)
     
     refresh_token = json_data.get('refresh_token')
-    access_token = await acquire_access_token(refresh_token)
+    client_id = json_data.get('client_id')
+    client_secret = json_data.get('client_secret')
+    access_token = await acquire_access_token(refresh_token, client_id, client_secret)
 
     web_server.add_background_task(call_endpoints, access_token)
     
@@ -154,7 +157,7 @@ async def send_logs() -> quartResponse:
     as_file = request.args.get('as_file', 'False') in {'TRUE','True','true'}
     if password != WEB_APP_PASSWORD:
         abort(403)
-    
+
     return await send_file('event-log.txt', as_attachment=as_file)
 
 if __name__ == '__main__':
