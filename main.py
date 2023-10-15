@@ -148,6 +148,7 @@ async def create_task() -> quartResponse:
     
     return 'Success - new task created.', 201
 
+"""
 @web_server.route('/logs')
 async def send_logs() -> quartResponse:
     password = request.args.get('password') or abort(401, None)
@@ -156,6 +157,7 @@ async def send_logs() -> quartResponse:
         abort(403)
     
     return await send_file('event-log.txt', as_attachment=as_file)
+"""
 
 if __name__ == '__main__':
     run(
