@@ -21,23 +21,31 @@
 <a name="how-to-use"></a>
 
 ## ❓ How to use?
-**If you lack the knowledge to deploy your own web server, you can use a ready-to-use public instance directly by following steps given below.**
+**By following the steps given below, you can use the public instance without deploying your own server or requiring any setup.**
 
 * Open below [URL](https://e5.thecaduceus.eu.org/auth) and get your refresh token.
-  ```
-  https://e5.thecaduceus.eu.org/auth
-  ```
+  * To increase the chances of getting your subscription renewed, configure the tool for your subscription’s admin accounts first, and then for non-admin accounts.
+
+    ```
+    https://e5.thecaduceus.eu.org/auth
+    ```
 * Now create a cron-job [here](https://cron-job.org) with following configuration:
   * **URL:**
+
     ```
     https://e5.thecaduceus.eu.org/call
     ```
+  * **Interval**: 3 hours - 8 hours.
+    > [!NOTE]
+    > A too-small interval can lead to Microsoft API flooding issues.
   * **Headers:**
+
     ```json
     {"Content-Type":"application/json"}
     ```
   * **Request Method:** POST
   * **Request Body:**
+
     ```json
     {"refresh_token": "YourRefreshTokenHere"}
     ```
@@ -97,30 +105,13 @@ pip install -r requirements.txt
 **The variables provided below should either be completed within the config.py file or configured as environment variables.**
 * `CLIENT_ID`|`E5_CLIENT_ID`: ID of your Azure Active Directory app. `str`
   * Create an app in [Azure Active Directory](https://portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/RegisteredApps).
-  * Set application permissions:
-    ```
-    Directory.Read.All,
-    Directory.ReadWrite.All,
-    Files.Read,
-    Files.Read.All,
-    Files.ReadWrite,
-    Files.ReadWrite.All,
-    Mail.Read,
-    Mail.ReadWrite,
-    MailboxSettings.Read,
-    MailboxSettings.ReadWrite,
-    Sites.Read.All,
-    Sites.ReadWrite.All,
-    User.Read,
-    User.Read.All,
-    User.ReadWrite.All
-    ```
   * Choose application type as 'Web' & set Redirect URL to `http://localhost:53682/`.
   * Copy the Application (client) ID.
 * `CLIENT_SECRET`|`E5_CLIENT_SECRET`: Secret of your Azure Active Directory app. `str`
   * In your  Azure Active Directory app overview, navigate to Client credentials and create secret.
 * `REFRESH_TOKEN`|`E5_REFRESH_TOKEN`: Refresh token for your admin account. `str`
   * In CLI, run:
+
     ```
     python auth.py YourClientID YourClientSecret
     ```
@@ -185,15 +176,17 @@ docker run -p 8080:8080 msft-e5-renewal
   * **Parameters:**
     * None.
   * **Example:**
-      ```shell
-      curl http://127.0.0.1:8080/
-      ```
+
+    ```shell
+    curl http://127.0.0.1:8080/
+    ```
 
 * **/call** - POST
 
   Command server to call Microsoft APIs on behalf of a user account.
 
   * **Headers:**
+
     ```json
     {"Content-Type":"application/json"}
     ```
@@ -203,9 +196,10 @@ docker run -p 8080:8080 msft-e5-renewal
     * `client_secret` (*optional*) - Secret of your Azure Active Directory app. By default provided client secret in *config.py*.
     * `refresh_token` (*optional*) - The refresh token of user account to act behalf of. By default provided refresh token in *config.py*.
   * **Example:**
-      ```shell
-      curl -X POST -H "Content-Type: application/json" -d '{"password":"RequiredPassword", "refresh_token": "OptionalRefreshToken"}' "http://127.0.0.1:8080/call"
-      ```
+
+    ```shell
+    curl -X POST -H "Content-Type: application/json" -d '{"password":"RequiredPassword", "refresh_token": "OptionalRefreshToken"}' "http://127.0.0.1:8080/call"
+    ```
 
 * **/logs** - GET
 
@@ -217,9 +211,10 @@ docker run -p 8080:8080 msft-e5-renewal
     * `password` (*required*) - The web app password.
     * `as_file` (*optional*) - By default, this parameter is set to False, allowing you to choose whether to send logs as a file with options True or False.
   * **Example**
-      ```shell
-      curl -o "event-log.txt" "http://127.0.0.1:8080/logs?password=1234&as_file=True"
-      ```
+
+    ```shell
+    curl -o "event-log.txt" "http://127.0.0.1:8080/logs?password=1234&as_file=True"
+    ```
 
 <a name="cron-job"></a>
 
@@ -234,14 +229,13 @@ docker run -p 8080:8080 msft-e5-renewal
     http://127.0.0.1:8080/call
     ```
 
-* **Interval**: 15 minutes - 8 hours.
+* **Interval**: 3 hours - 8 hours.
   * A too-small interval can lead to API flooding issues.
 * **Header**:
 
     ```json
     {"Content-Type":"application/json"}
     ```
-
 * **Request Method**: `POST`
 * **Parameters: (as Json)**
   * `password` (*required*) - Your `WEB_APP_PASSWORD` to ensure that this request originates from a trusted source.
