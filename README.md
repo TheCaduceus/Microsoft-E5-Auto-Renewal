@@ -12,7 +12,6 @@
 * [**🕹 Deployment**](#deployment)
   * [Locally](#d-1)
   * [Docker](#d-2)
-  * [Cyclic](#d-3)
 * [**🌐 Routes**](#routes)
 * [**⏰ Cron-Job**](#cron-job)
 * [**⛑️ Need help!**](#help)
@@ -24,6 +23,7 @@
 **By following the steps given below, you can use the public instance without deploying your own server or requiring any setup.**
 
 * Open below [URL](https://e5.thecaduceus.eu.org/auth) and get your refresh token.
+
   * To increase the chances of getting your subscription renewed, configure the tool for your subscription’s admin accounts first, and then for non-admin accounts.
   <br><br>
   ```
@@ -37,7 +37,7 @@
     ```
     https://e5.thecaduceus.eu.org/call
     ```
-  * **Interval**: 3 hours - 8 hours.
+  * **Interval**: 3 - 8 hours.
     > [!NOTE]
     > A too-small interval can lead to Microsoft API flooding issues.
   * **Headers:**
@@ -63,16 +63,16 @@
 
 For Windows:
 ```
-winget install Python.Python.3.11
+winget install Python.Python.3.12
 winget install Git.Git
 ```
 For Linux:
 ```
-sudo apt-get update && sudo apt-get install -y python3.11 git pip
+sudo apt-get update && sudo apt-get install -y python3.12 git pip
 ```
 For macOS:
 ```
-brew install python@3.11 git
+brew install python@3.12 git
 ```
 For Termux:
 ```
@@ -153,20 +153,6 @@ docker build -t msft-e5-renewal .
 docker run -p 8080:8080 msft-e5-renewal
 ```
 
-<a name="d-3"></a>
-
-**3.Deployment on Cyclic:** *(Easiest & Free)*
-* Sign-up on Cyclic [here](https://app.cyclic.sh/#/join/TheCaduceus).
-* Click deployment button given below:<br>
-[![Deploy to Cyclic](https://deploy.cyclic.sh/button.svg)](https://deploy.cyclic.sh/TheCaduceus/Microsoft-E5-Auto-Renewal)
-* Select `main.py` as main file and `cyclic` as branch.
-* Switch to 'Variables' tab and set all environment variables (starting with `E5_`) except `PORT` given above.
-* Click "Connect Cyclic" and it will be deployed automatically.
-* Finally, you can create cron-job using your Cyclic app endpoint as mentioned [here](#cron-job).
-
-> [!NOTE]
-> Due to the read-only file system provided by Cyclic, the /logs route is disabled.
-
 <a name="routes"></a>
 
 ## 🌐 Routes
@@ -233,17 +219,19 @@ docker run -p 8080:8080 msft-e5-renewal
     http://127.0.0.1:8080/call
     ```
 
-* **Interval**: 3 hours - 8 hours.
-  * A too-small interval can lead to API flooding issues.
+* **Interval**: 3 - 8 hours.
+    > [!NOTE]
+    > A too-small interval can lead to Microsoft API flooding issues.
 * **Header**:
 
     ```json
     {"Content-Type":"application/json"}
     ```
 * **Request Method**: `POST`
-* **Parameters: (as Json)**
-  * `password` (*required*) - Your `WEB_APP_PASSWORD` to ensure that this request originates from a trusted source.
-  * `refresh_token` (*optional*) - The refresh token of the user account to act behalf of. By default, the refresh token provided in config.py.
+* **Parameters: (as JSON)**
+  * `password` (*required*) - The web app password.
+  
+  For all other optional parameters, refer to [here](#routes).
 
     ```json
     {
