@@ -25,10 +25,12 @@
 
 * Open below [URL](https://e5.thecaduceus.eu.org/auth) and get your refresh token.
   * To increase the chances of getting your subscription renewed, configure the tool for your subscription’s admin accounts first, and then for non-admin accounts.
-
-    ```
-    https://e5.thecaduceus.eu.org/auth
-    ```
+  <br><br>
+  ```
+  https://e5.thecaduceus.eu.org/auth
+  ```
+  > [!NOTE]
+  > All refresh tokens issued by the server have a validity period of 90 days from the date of issue. Therefore, it is important to renew them before they expire. You can acquire a new refresh token by logging in using the same URL.
 * Now create a cron-job [here](https://cron-job.org) with following configuration:
   * **URL:**
 
@@ -110,6 +112,8 @@ pip install -r requirements.txt
 * `CLIENT_SECRET`|`E5_CLIENT_SECRET`: Secret of your Azure Active Directory app. `str`
   * In your  Azure Active Directory app overview, navigate to Client credentials and create secret.
 * `REFRESH_TOKEN`|`E5_REFRESH_TOKEN`: Refresh token for your admin account. `str`
+> [!NOTE]
+> All refresh tokens issued by the authorization client have a validity period of 90 days from the date of issue. Therefore, it is important to renew them before they expire.
   * In CLI, run:
 
     ```
