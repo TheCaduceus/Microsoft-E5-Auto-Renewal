@@ -37,7 +37,7 @@
     ```
     https://e5.thecaduceus.eu.org/call
     ```
-  * **Interval**: 3 - 8 hours.
+  * **Interval**: 1 - 8 hours.
     > [!NOTE]
     > A too-small interval can lead to Microsoft API flooding issues.
   * **Headers:**
@@ -219,7 +219,7 @@ docker run -p 8080:8080 msft-e5-renewal
     http://127.0.0.1:8080/call
     ```
 
-* **Interval**: 3 - 8 hours.
+* **Interval**: 1 - 8 hours.
     > [!NOTE]
     > A too-small interval can lead to Microsoft API flooding issues.
 * **Header**:
