@@ -8,14 +8,12 @@ from config import *
 
 class WebServer:
     instance = Quart(__name__)
-    version = 2.0
+    version = 2.1
     stats = {'version': version, 'totalRequests': 0, 'totalSuccess': 0, 'totalErrors': 0}
 
     def __init__(self):
         self.logger = getLogger('uvicorn')
-        self.initialize()
 
-    def initialize(self):
         @self.instance.before_serving
         async def before_serve():
             host = f"127.0.0.1:{WEB_APP_PORT}" if WEB_APP_HOST == "0.0.0.0" else f"{WEB_APP_HOST}:{WEB_APP_PORT}"
@@ -59,7 +57,7 @@ class ErrorHandler:
             405: 'Invalid method',
             415: 'No json data passed.'
         }
-    
+
         @instance.errorhandler(400)
         async def invalid_request(_):
             return 'Invalid request.', 400
@@ -87,7 +85,7 @@ class RouteHandler:
         @instance.route('/')
         async def home():
             return WebServer.stats, 200
-        
+
         @instance.route('/call', methods=['POST'])
         async def create_task():
             json_data = await request.json or ErrorHandler.abort(415)
