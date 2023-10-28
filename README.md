@@ -66,7 +66,7 @@
   * **Request Method:** POST
   * **Request Body:**
   > [!NOTE]
-  > If you are using your own Authorization Client, you should also pass the values of `client_id` and `client_secret`.`
+  > If you are using your own Authorization Client, you should also pass the values of *client_id* and *client_secret*.
 
     ```json
     {"refresh_token": "YourRefreshTokenHere"}
