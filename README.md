@@ -38,7 +38,6 @@
       ```
 
   * Provide your client ID and client secret to server as URL paramters as given below and acquire your refresh token.
-    * To prevent cross-site request forgery (CSRF) attacks, the server will automatically add a 32-character-long CSRF token.
     * Your client ID and client secret will be securely stored in your browser in an encrypted form to complete the authorization process. Once you close your browser, they will be erased.
 
       ```
@@ -46,6 +45,7 @@
       ```
 
 > [!NOTE]
+> * To prevent cross-site request forgery (CSRF) attacks, the server will automatically add a 32-character-long CSRF token.
 > * To increase the chances of getting your subscription renewed, configure the tool for your subscription’s admin accounts first, and then for non-admin accounts.
 > * All refresh tokens issued by the server have a validity period of 90 days from the date of issue. You can acquire a new refresh token by logging in using the same URL.
 
