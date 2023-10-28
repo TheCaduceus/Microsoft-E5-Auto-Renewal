@@ -22,16 +22,34 @@
 ## ❓ How to use?
 **By following the steps given below, you can use the public instance without deploying your own server or requiring any setup.**
 
-* Open below [URL](https://e5.thecaduceus.eu.org/auth) and get your refresh token.
+**1.Using default Authorization Client:** *(for newbies)*
+  * Open below [URL](https://e5.thecaduceus.eu.org/auth) and get your refresh token.
 
-  * To increase the chances of getting your subscription renewed, configure the tool for your subscription’s admin accounts first, and then for non-admin accounts.
-  <br><br>
-  ```
-  https://e5.thecaduceus.eu.org/auth
-  ```
-  > [!NOTE]
-  > All refresh tokens issued by the server have a validity period of 90 days from the date of issue. Therefore, it is important to renew them before they expire. You can acquire a new refresh token by logging in using the same URL.
-* Now create a cron-job [here](https://cron-job.org) with following configuration:
+    ```
+    https://e5.thecaduceus.eu.org/auth
+    ```
+
+**2.Using own Authorization Client:** *(Recommended)*
+  * Acquire your client id and secret as given [here](#variables).
+    * Redirect URL should be:
+
+      ```
+      https://e5.thecaduceus.eu.org/auth
+      ```
+
+  * Provide your client ID and client secret to server as URL paramters as given below and acquire your refresh token.
+    * Your client ID and client secret will be securely stored in your browser in an encrypted form to complete the authorization process. Once you close your browser, they will be erased.
+
+      ```
+      https://e5.thecaduceus.eu.org/auth?client_id=YourClientID&client_secret=YourClientSecret
+      ```
+
+> [!NOTE]
+> * To prevent cross-site request forgery (CSRF) attacks, the server will automatically add a 32-character-long CSRF token.
+> * To increase the chances of getting your subscription renewed, configure the tool for your subscription’s admin accounts first, and then for non-admin accounts.
+> * All refresh tokens issued by the server have a validity period of 90 days from the date of issue. You can acquire a new refresh token by logging in using the same URL.
+
+* Now create a cron-job [here](https://cron-job.org) or any other service of your choice with following configuration:
   * **URL:**
 
     ```
@@ -47,6 +65,8 @@
     ```
   * **Request Method:** POST
   * **Request Body:**
+  > [!NOTE]
+  > If you are using your own Authorization Client, you should also pass the values of *client_id* and *client_secret*.
 
     ```json
     {"refresh_token": "YourRefreshTokenHere"}
@@ -107,13 +127,13 @@ pip install -r requirements.txt
 **The variables provided below should either be completed within the config.py file or configured as environment variables.**
 * `CLIENT_ID`|`E5_CLIENT_ID`: ID of your Azure Active Directory app. `str`
   * Create an app in [Azure Active Directory](https://portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/RegisteredApps).
-  * Choose application type as 'Web' & set Redirect URL to `http://localhost:53682/`.
+  * Choose application type as 'Web' & set Redirect URL to `http://localhost:53682/` or `https://e5.thecaduceus.eu.org/auth` in case you are creating one to use with public instance.
   * Copy the Application (client) ID.
 * `CLIENT_SECRET`|`E5_CLIENT_SECRET`: Secret of your Azure Active Directory app. `str`
   * In your  Azure Active Directory app overview, navigate to Client credentials and create secret.
 * `REFRESH_TOKEN`|`E5_REFRESH_TOKEN`: Refresh token for your admin account. `str`
 > [!NOTE]
-> All refresh tokens issued by the authorization client have a validity period of 90 days from the date of issue. Therefore, it is important to renew them before they expire.
+> All refresh tokens issued by the authorization client have a validity period of 90 days from the date of issue.
   * In CLI, run:
 
     ```
