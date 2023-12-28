@@ -22,30 +22,21 @@
 ## ❓ How to use?
 **By following the steps given below, you can use the public instance without deploying your own server or requiring any setup.**
 
-**1.Using default Authorization Client:** *(for newbies)*
-  * Open below [URL](https://e5.thecaduceus.eu.org/auth) and get your refresh token.
+* Acquire your client ID and secret as given [here](#variables).
+  * Redirect URL should be:
 
     ```
     https://e5.thecaduceus.eu.org/auth
     ```
 
-**2.Using own Authorization Client:** *(Recommended)*
-  * Acquire your client id and secret as given [here](#variables).
-    * Redirect URL should be:
+* Provide your client ID and secret to server as URL paramters as given below and acquire your refresh token.
+  * Your client ID and secret will be securely stored in your browser in an encrypted form to complete the authorization process. Once you close your browser, they will be erased.
 
-      ```
-      https://e5.thecaduceus.eu.org/auth
-      ```
-
-  * Provide your client ID and client secret to server as URL paramters as given below and acquire your refresh token.
-    * Your client ID and client secret will be securely stored in your browser in an encrypted form to complete the authorization process. Once you close your browser, they will be erased.
-
-      ```
-      https://e5.thecaduceus.eu.org/auth?client_id=YourClientID&client_secret=YourClientSecret
-      ```
+    ```
+    https://e5.thecaduceus.eu.org/auth?client_id=YourClientID&client_secret=YourClientSecret
+    ```
 
 > [!NOTE]
-> * To prevent cross-site request forgery (CSRF) attacks, the server will automatically add a 32-character-long CSRF token.
 > * To increase the chances of getting your subscription renewed, configure the tool for your subscription’s admin accounts first, and then for non-admin accounts.
 > * All refresh tokens issued by the server have a validity period of 90 days from the date of issue. You can acquire a new refresh token by logging in using the same URL.
 
@@ -56,21 +47,25 @@
     https://e5.thecaduceus.eu.org/call
     ```
   * **Interval**: 1 - 8 hours.
-    > [!NOTE]
-    > A too-small interval can lead to Microsoft API flooding issues.
+
+> [!NOTE]
+> A too-small interval can lead to Microsoft API flooding issues.
+
   * **Headers:**
 
-    ```json
-    {"Content-Type":"application/json"}
-    ```
+  ```json
+  {"Content-Type":"application/json"}
+  ```
   * **Request Method:** POST
   * **Request Body:**
-  > [!NOTE]
-  > If you are using your own Authorization Client, you should also pass the values of *client_id* and *client_secret*.
+  ```json
+    {
+      "refresh_token": "YourRefreshTokenHere",
+      "client_id": "YourClientID",
+      "client_secret": "YourClientSecret"
+    }
+  ```
 
-    ```json
-    {"refresh_token": "YourRefreshTokenHere"}
-    ```
 * You did it!🎉
 
 <a name="installation"></a>
@@ -132,8 +127,6 @@ pip install -r requirements.txt
 * `CLIENT_SECRET`|`E5_CLIENT_SECRET`: Secret of your Azure Active Directory app. `str`
   * In your  Azure Active Directory app overview, navigate to Client credentials and create secret.
 * `REFRESH_TOKEN`|`E5_REFRESH_TOKEN`: Refresh token for your admin account. `str`
-> [!NOTE]
-> All refresh tokens issued by the authorization client have a validity period of 90 days from the date of issue.
   * In CLI, run:
 
     ```
@@ -141,6 +134,10 @@ pip install -r requirements.txt
     ```
   * Follow on-screen instructions.
   * From output, copy the value of `refresh_token` key.
+
+> [!NOTE]
+> All refresh tokens issued by the authorization client have a validity period of 90 days from the date of issue.
+
 * `WEB_APP_PASSWORD`|`E5_WEB_APP_PASSWORD`: Strong password to protect critical routes of your web server. `str`
   * Keep it strong and don't share it.
 * `WEB_APP_HOST`|`E5_WEB_APP_HOST`: Bind address of web server. `str`
@@ -240,8 +237,8 @@ docker run -p 8080:8080 msft-e5-renewal
     ```
 
 * **Interval**: 1 - 8 hours.
-    > [!NOTE]
-    > A too-small interval can lead to Microsoft API flooding issues.
+> [!NOTE]
+> A too-small interval can lead to Microsoft API flooding issues.
 * **Header**:
 
     ```json
