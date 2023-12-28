@@ -22,6 +22,9 @@
 ## ❓ How to use?
 **By following the steps given below, you can use the public instance without deploying your own server or requiring any setup.**
 
+> [!WARNING]
+> Refresh tokens issued by the public instance's default authorization client will be invalidated by 04/03/2024. Please make sure to use your own authorization client details with the public instance to generate refresh tokens for your accounts.
+
 * Acquire your client ID and secret as given [here](#variables).
   * Redirect URL should be:
 
@@ -53,18 +56,18 @@
 
   * **Headers:**
 
-  ```json
-  {"Content-Type":"application/json"}
-  ```
+    ```json
+    {"Content-Type":"application/json"}
+    ```
   * **Request Method:** POST
   * **Request Body:**
-  ```json
-    {
-      "refresh_token": "YourRefreshTokenHere",
-      "client_id": "YourClientID",
-      "client_secret": "YourClientSecret"
-    }
-  ```
+    ```json
+      {
+        "refresh_token": "YourRefreshTokenHere",
+        "client_id": "YourClientID",
+        "client_secret": "YourClientSecret"
+      }
+    ```
 
 * You did it!🎉
 
@@ -76,45 +79,53 @@
 
 **1.Install Python & Git:**
 
-For Windows:
-```
-winget install Python.Python.3.12
-winget install Git.Git
-```
-For Linux:
-```
-sudo apt-get update && sudo apt-get install -y python3.12 git pip
-```
-For macOS:
-```
-brew install python@3.12 git
-```
-For Termux:
-```
-pkg install python -y
-pkg install git -y
-```
+  * For Windows:
+
+    ```
+    winget install Python.Python.3.12
+    winget install Git.Git
+    ```
+
+  * For Linux:
+
+    ```
+    sudo apt-get update && sudo apt-get install -y python3.12 git pip
+    ```
+
+  * For macOS:
+
+    ```
+    brew install python@3.12 git
+    ```
+
+  * For Termux:
+
+    ```
+    pkg install python -y
+    pkg install git -y
+    ```
 
 <a name="i-2"></a>
 
 **2.Download repository:**
-```
-git clone https://github.com/TheCaduceus/Microsoft-E5-Auto-Renewal.git
-```
+
+  ```
+  git clone https://github.com/TheCaduceus/Microsoft-E5-Auto-Renewal.git
+  ```
 
 **3.Change Directory:**
 
-```
-cd Microsoft-E5-Auto-Renewal
-```
+  ```
+  cd Microsoft-E5-Auto-Renewal
+  ```
 
 <a name="i-3"></a>
 
 **4.Install requirements:**
 
-```
-pip install -r requirements.txt
-```
+  ```
+  pip install -r requirements.txt
+  ```
 
 <a name="variables"></a>
 
