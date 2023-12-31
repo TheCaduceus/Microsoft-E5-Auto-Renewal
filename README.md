@@ -22,8 +22,11 @@
 ## ❓ How to use?
 **By following the steps given below, you can use the public instance without deploying your own server or requiring any setup.**
 
-> [!WARNING]
-> Refresh tokens issued by the public instance's default authorization client will be invalidated by 04/03/2024. Please make sure to use your own authorization client details with the public instance to generate refresh tokens for your accounts.
+> [!IMPORTANT]
+> * The generation of new refresh tokens using the public instance's default authorization client is now disabled.
+> * Old refresh tokens will continue to work until they are invalidated 90 days from the date of their issue.
+> * It is now mandatory to use your own authorization client with the public instance to maximize the probability of renewing your subscription.
+> * Below is the comprehensive guide on how to use your own authorization client with the public instance.
 
 * Acquire your client ID and secret as given [here](#variables).
   * Redirect URL should be:
@@ -39,9 +42,9 @@
     https://e5.thecaduceus.eu.org/auth?client_id=YourClientID&client_secret=YourClientSecret
     ```
 
-> [!NOTE]
+> [!TIP]
 > * To increase the chances of getting your subscription renewed, configure the tool for your subscription’s admin accounts first, and then for non-admin accounts.
-> * All refresh tokens issued by the server have a validity period of 90 days from the date of issue. You can acquire a new refresh token by logging in using the same URL.
+> * All refresh tokens issued by the server have a validity period of 90 days from the date of issue. You can acquire a new refresh token by logging in using the same URL (bookmark it!).
 
 * Now create a cron-job [here](https://cron-job.org) or any other service of your choice with following configuration:
   * **URL:**
@@ -165,21 +168,21 @@
 <a name="d-1"></a>
 
 **1.Running locally:** *(Best for testing)*
-```
-python main.py
-```
+  ```
+  python main.py
+  ```
 
 <a name="d-2"></a>
 
 **2.Using Docker:** *(Recommended)*
 * Build own Docker image:
-```
-docker build -t msft-e5-renewal .
-```
+  ```
+  docker build -t msft-e5-renewal .
+  ```
 * Run the Docker container:
-```
-docker run -p 8080:8080 msft-e5-renewal
-```
+  ```
+  docker run -p 8080:8080 msft-e5-renewal
+  ```
 
 <a name="routes"></a>
 
@@ -248,7 +251,7 @@ docker run -p 8080:8080 msft-e5-renewal
     ```
 
 * **Interval**: 1 - 8 hours.
-> [!NOTE]
+> [!WARNING]
 > A too-small interval can lead to Microsoft API flooding issues.
 * **Header**:
 
