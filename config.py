@@ -1,4 +1,13 @@
 from os import environ as env
+from pathlib import Path
+from dotenv import load_dotenv
+
+BASE_DIR = Path(__file__).resolve().parent
+envfile = BASE_DIR / '.env'
+
+print("settings: dotenv path", envfile)
+load_dotenv(envfile)
+
 
 """
 Changing value to "" (empty) or 0 will force the program to acquire that variable's value from system environment.
