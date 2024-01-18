@@ -1,3 +1,4 @@
 uvicorn
 quart
 httpx
+python-dotenv
