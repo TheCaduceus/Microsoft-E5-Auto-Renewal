@@ -39,7 +39,7 @@
 
   * Interval can be from 1 hour to 8 hours.
 
-<div align="center"> <img src="https://github.com/TheCaduceus/Microsoft-E5-Auto-Renewal/assets/87380104/f39b52bd-e071-4391-8685-756361a4cff9"> </div><br>
+<div align="center"> <img src="https://github.com/TheCaduceus/Microsoft-E5-Auto-Renewal/assets/87380104/7acd8156-493d-4138-990d-01a0c25336d1"> </div><br>
 
 > [!TIP]
 > * To increase the chances of getting your subscription renewed, configure the tool for your subscription’s admin accounts first, and then for non-admin accounts.
