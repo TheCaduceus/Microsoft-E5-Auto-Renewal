@@ -22,12 +22,6 @@
 ## ❓ How to use?
 **By following the steps given below, you can use the public instance without deploying your own server or requiring any setup.**
 
-> [!IMPORTANT]
-> * The generation of new refresh tokens using the public instance's default authorization client is now disabled.
-> * Old refresh tokens will continue to work until they are invalidated 90 days from the date of their issue.
-> * It is now mandatory to use your own authorization client with the public instance to maximize the probability of renewing your subscription.
-> * Below is the comprehensive guide on how to use your own authorization client with the public instance.
-
 * Acquire your client ID and secret as given [here](#variables).
   * Redirect URL should be:
 
@@ -35,42 +29,21 @@
     https://e5.thecaduceus.eu.org/auth
     ```
 
-* Provide your client ID and secret to server as URL paramters as given below and acquire your refresh token.
-  * Your client ID and secret will be securely stored in your browser in an encrypted form to complete the authorization process. Once you close your browser, they will be erased.
+* Click [here](https://e5.thecaduceus.eu.org), fill in your authorization client details that you collected above, and follow the on-screen instructions.
 
-    ```
-    https://e5.thecaduceus.eu.org/auth?client_id=YourClientID&client_secret=YourClientSecret
-    ```
+  * Your client ID and secret will be securely stored in your browser in an encoded form to complete the authorization process. Once you close your browser, they will be erased.
+
+<div align="center"> <img src="https://github.com/TheCaduceus/Microsoft-E5-Auto-Renewal/assets/87380104/2c9bd9ab-5224-49b5-8d5b-c4bfd6846189"> </div><br>
+
+* Now create a cron-job [here](https://cron-job.org) or on platform of your choice with the details displayed by the website.
+
+  * Interval can be from 1 hour to 8 hours.
+
+<div align="center"> <img src="https://github.com/TheCaduceus/Microsoft-E5-Auto-Renewal/assets/87380104/7acd8156-493d-4138-990d-01a0c25336d1"> </div><br>
 
 > [!TIP]
 > * To increase the chances of getting your subscription renewed, configure the tool for your subscription’s admin accounts first, and then for non-admin accounts.
-> * All refresh tokens issued by the server have a validity period of 90 days from the date of issue. You can acquire a new refresh token by logging in using the same URL (bookmark it!).
-
-* Now create a cron-job [here](https://cron-job.org) or any other service of your choice with following configuration:
-  * **URL:**
-
-    ```
-    https://e5.thecaduceus.eu.org/call
-    ```
-  * **Interval**: 1 - 8 hours.
-
-> [!NOTE]
-> A too-small interval can lead to Microsoft API flooding issues.
-
-  * **Headers:**
-
-    ```json
-    {"Content-Type":"application/json"}
-    ```
-  * **Request Method:** POST
-  * **Request Body:**
-    ```json
-      {
-        "refresh_token": "YourRefreshTokenHere",
-        "client_id": "YourClientID",
-        "client_secret": "YourClientSecret"
-      }
-    ```
+> * All refresh tokens issued by the website have a validity period of 90 days from the date of issue. You can acquire a new refresh token by logging in using the same URL (bookmark it!).
 
 * You did it!🎉
 
