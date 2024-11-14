@@ -1,3 +1,4 @@
 uvicorn
 quart
 httpx
+flask==3.0.3 
