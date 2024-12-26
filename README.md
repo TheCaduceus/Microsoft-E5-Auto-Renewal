@@ -33,13 +33,13 @@
 
   * Your client ID and secret will be securely stored in your browser in an encoded form to complete the authorization process. Once you close your browser, they will be erased.
 
-<div align="center"> <img src="https://github.com/TheCaduceus/Microsoft-E5-Auto-Renewal/assets/87380104/2c9bd9ab-5224-49b5-8d5b-c4bfd6846189"> </div><br>
+<div align="center"> <img src="https://github.com/user-attachments/assets/428863cb-cc3a-4361-89fa-c00177a393e8"> </div><br>
 
 * Now create a cron-job [here](https://cron-job.org) or on platform of your choice with the details displayed by the website.
 
   * Interval can be from 1 hour to 8 hours.
 
-<div align="center"> <img src="https://github.com/TheCaduceus/Microsoft-E5-Auto-Renewal/assets/87380104/7acd8156-493d-4138-990d-01a0c25336d1"> </div><br>
+<div align="center"> <img src="https://github.com/user-attachments/assets/f742cc65-a713-49f1-8aab-9ea5e4c95b55"> </div><br>
 
 > [!TIP]
 > * To increase the chances of getting your subscription renewed, configure the tool for your subscription’s admin accounts first, and then for non-admin accounts.
